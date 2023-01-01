@@ -20,9 +20,16 @@ namespace MachineControl
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static Cylinder Cylinder1 = new Cylinder("horizontalCylinder", "130Z1");
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Open_Click(object sender, RoutedEventArgs e)
+        {
+            CylinderUI uiCylinder = new CylinderUI(Cylinder1);
+            uiCylinder.Show();
         }
     }
 }

@@ -5,8 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MachineControl"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="MainWindow" Height="450" Width="300">
+    <Border x:Name="MainBorder"
+        Margin="10"
+        Padding="10">
+        <StackPanel>
+            <Button x:Name="Open"
+                Content="Open"
+                FontSize="14"
+                Click="Open_Click"/>
+        </StackPanel>
+    </Border>
 </Window>
