@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -33,7 +34,7 @@ namespace MachineControl
         }
 
         public string ActuatorType
-        { 
+        {
             get;
         }
     }
@@ -46,20 +47,20 @@ namespace MachineControl
         public Cylinder(string name, string identifier)
             : base(name, identifier, "Cylinder")
         {
-        }   
+        }
 
-        public bool ControlToBasePosition()
+        public void ControlToBasePosition()
         {
             _runToBasePosition = true;
             _runToWorkPosition = false;
-            return true;
+            OnStateChanged(getRunningStateToBasePosition());
         }
 
-        public bool ControlToWorkPosition()
+        public void ControlToWorkPosition()
         {
             _runToBasePosition = false;
             _runToWorkPosition = true;
-            return true;
+            OnStateChanged(getRunningStateToBasePosition());
         }
 
         public string getRunningStateToBasePosition()
@@ -77,7 +78,21 @@ namespace MachineControl
                 return "Run To WP";
             }
             return "No Operation";
-
         }
+
+        public event EventHandler<CylinderStateEventArgs> StateChanged;
+
+        protected virtual void OnStateChanged(string BasePos)
+        {
+            if (StateChanged != null)
+            {
+                StateChanged(this, new CylinderStateEventArgs() { CylinderState = BasePos });
+            }
+        }
+    }
+
+    public class CylinderStateEventArgs : EventArgs
+    {
+        public string CylinderState { get; set; }
     }
 }

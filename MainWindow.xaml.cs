@@ -21,6 +21,7 @@ namespace MachineControl
     public partial class MainWindow : Window
     {
         public static Cylinder Cylinder1 = new Cylinder("horizontalCylinder", "130Z1");
+        public static Cylinder Cylinder2 = new Cylinder("verticalzylinder", "230Z1");
         public MainWindow()
         {
             InitializeComponent();
@@ -30,6 +31,12 @@ namespace MachineControl
         {
             CylinderUI uiCylinder = new CylinderUI(Cylinder1);
             uiCylinder.Show();
+        }
+
+        private void Open2_Click(object sender, RoutedEventArgs e)
+        {
+            CylinderUI uiCylinder2 = new CylinderUI(Cylinder2);
+            uiCylinder2.Show();
         }
     }
 }

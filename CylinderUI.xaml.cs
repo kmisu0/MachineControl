@@ -19,33 +19,40 @@ namespace MachineControl
     /// </summary>
     public partial class CylinderUI : Window
     {
-        private Cylinder activeCylinder
-        {
-            get; set;
-        }
+        Cylinder thisCylinder;
+
 
         public CylinderUI(object sender)
         {
             InitializeComponent();
 
-            activeCylinder = (Cylinder)sender;
+            thisCylinder = (Cylinder)sender;
 
-            txtBoxName.Text = activeCylinder.Name;
-            txtBoxActuatorType.Text = activeCylinder.ActuatorType;
-            txtBoxID.Text = activeCylinder.ID;
+            // Subscribe to the event
+            thisCylinder.StateChanged += ThisCylinder_StateChanged;
 
-            txtBoxStateBasePosition.Text = activeCylinder.getRunningStateToBasePosition();
-            txtBoxStateWorkPosition.Text = activeCylinder.getRunningStateToWorkPosition();
+            txtBoxName.Text = thisCylinder.Name;
+            txtBoxActuatorType.Text = thisCylinder.ActuatorType;
+            txtBoxID.Text = thisCylinder.ID;
+
+            txtBoxStateBasePosition.Text = thisCylinder.getRunningStateToBasePosition();
+            txtBoxStateWorkPosition.Text = thisCylinder.getRunningStateToWorkPosition();
+        }
+
+        private void ThisCylinder_StateChanged(object sender, CylinderStateEventArgs e)
+        {
+            txtBoxStateBasePosition.Text = e.CylinderState;
+            txtBoxStateWorkPosition.Text = e.CylinderState;
         }
 
         private void btnControlToWork_Click(object sender, RoutedEventArgs e)
         {
-            activeCylinder.ControlToWorkPosition();
+            thisCylinder.ControlToWorkPosition();
         }
 
         private void btnControlToBase_Click(object sender, RoutedEventArgs e)
         {
-            activeCylinder.ControlToBasePosition();
+            thisCylinder.ControlToBasePosition();
         }
     }
 }

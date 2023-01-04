@@ -9,11 +9,16 @@
     <Border x:Name="MainBorder"
         Margin="10"
         Padding="10">
-        <StackPanel>
+        <StackPanel>          
             <Button x:Name="Open"
                 Content="Open"
                 FontSize="14"
                 Click="Open_Click"/>
+
+            <Button x:Name="Open2"
+                Content="Open2"
+                FontSize="14"
+                Click="Open2_Click"/>
         </StackPanel>
     </Border>
 </Window>
