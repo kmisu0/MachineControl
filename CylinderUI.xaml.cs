@@ -9,8 +9,6 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace MachineControl
 {
@@ -34,15 +32,51 @@ namespace MachineControl
             txtBoxName.Text = thisCylinder.Name;
             txtBoxActuatorType.Text = thisCylinder.ActuatorType;
             txtBoxID.Text = thisCylinder.ID;
-
-            txtBoxStateBasePosition.Text = thisCylinder.getRunningStateToBasePosition();
-            txtBoxStateWorkPosition.Text = thisCylinder.getRunningStateToWorkPosition();
         }
 
         private void ThisCylinder_StateChanged(object sender, CylinderStateEventArgs e)
         {
-            txtBoxStateBasePosition.Text = e.CylinderState;
-            txtBoxStateWorkPosition.Text = e.CylinderState;
+            foreach (string state in e.cylinderStates)
+            {
+                if (state.Contains("runToBasePosition"))
+                {
+                    txtBoxStateBasePosition.Text = "Run To BP";
+                    txtBoxStateBasePosition.Background = new SolidColorBrush(Color.FromArgb(0xFF ,0x00,0xFF,0x00));
+                    break;
+                }
+                else if (state.Contains("releasedToBasePos"))
+                {
+                    txtBoxStateBasePosition.Text = "Released To BP";
+                    txtBoxStateBasePosition.Background = new SolidColorBrush(Color.FromArgb(0xFF ,0xAA, 0xFF, 0xAA));
+                    break;
+                }
+                else
+                {
+                    txtBoxStateBasePosition.Text = "No Operation";
+                    txtBoxStateBasePosition.Background = new SolidColorBrush(Color.FromArgb(0x00, 0x00, 0x00, 0x00));
+                }
+            }
+
+            foreach (string state in e.cylinderStates)
+            {
+                if (state.Contains("runToWorkPosition"))
+                {
+                    txtBoxStateWorkPosition.Text = "Run To WP";
+                    txtBoxStateWorkPosition.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0x00, 0xFF, 0x00));
+                    break;
+                }
+                else if (state.Contains("releasedToWorkPosition"))
+                {
+                    txtBoxStateWorkPosition.Text = "Released To WP";
+                    txtBoxStateWorkPosition.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0xAA, 0xFF, 0xAA));
+                    break;
+                }
+                else
+                {
+                    txtBoxStateWorkPosition.Text = "No Operation";
+                    txtBoxStateWorkPosition.Background = new SolidColorBrush(Color.FromArgb(0x00, 0x00, 0x00, 0x00));
+                }
+            }
         }
 
         private void btnControlToWork_Click(object sender, RoutedEventArgs e)

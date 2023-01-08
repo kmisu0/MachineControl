@@ -41,58 +41,121 @@ namespace MachineControl
 
     public partial class Cylinder : Actuator
     {
+        // Fields
         private bool _runToBasePosition;
         private bool _runToWorkPosition;
+        private bool _releasedToBasePosition;
+        private bool _releasedToWorkPosition;
 
+        // Constructors
         public Cylinder(string name, string identifier)
             : base(name, identifier, "Cylinder")
         {
+            _releasedToBasePosition = true;
         }
 
+        // Methods
         public void ControlToBasePosition()
         {
             _runToBasePosition = true;
             _runToWorkPosition = false;
-            OnStateChanged(getRunningStateToBasePosition());
+            OnStateChanged(getRunningState());
         }
 
         public void ControlToWorkPosition()
         {
             _runToBasePosition = false;
             _runToWorkPosition = true;
-            OnStateChanged(getRunningStateToBasePosition());
+            OnStateChanged(getRunningState());
         }
-
-        public string getRunningStateToBasePosition()
+        
+        public CylinderStateEventArgs getRunningState()
         {
+            CylinderStateEventArgs result = new CylinderStateEventArgs();
+
             if (_runToBasePosition)
             {
-                return "Run to BP";
+                if (!result.cylinderStates.Contains("runToBasePosition"))
+                {
+                    result.cylinderStates.Add("runToBasePosition");
+                }
             }
-            return "No Operation";
-        }
-        public string getRunningStateToWorkPosition()
-        {
+            else
+            {
+                if (result.cylinderStates.Contains("runToBasePosition"))
+                {
+                    result.cylinderStates.Remove("runToBasePosition");
+                }
+            }
+
+            if (_releasedToBasePosition)
+            {
+                if (!result.cylinderStates.Contains("releasedToBasePosition"))
+                {
+                    result.cylinderStates.Add("releasedToBasePosition");
+                }
+            }
+            else
+            {
+                if (result.cylinderStates.Contains("releasedToBasePosition"))
+                {
+                    result.cylinderStates.Remove("releasedToBasePosition");
+                }
+            }
+
             if (_runToWorkPosition)
             {
-                return "Run To WP";
+                if (!result.cylinderStates.Contains("runToWorkPosition"))
+                {
+                    result.cylinderStates.Add("runToWorkPosition");
+                }
             }
-            return "No Operation";
+            else
+            {
+                if (!result.cylinderStates.Contains("runToWorkPosition"))
+                {
+                    result.cylinderStates.Remove("runToWorkPosition");
+                }
+            }
+
+            if (_releasedToWorkPosition)
+            {
+                if (!result.cylinderStates.Contains("releasedToWorkPosition"))
+                {
+                    result.cylinderStates.Add("releasedToWorkPosition");
+                }
+            }
+            else
+            {
+                if (result.cylinderStates.Contains("releasedToWorkPosition"))
+                {
+                    result.cylinderStates.Remove("releasedToWorkPosition");
+                }
+            }
+
+            return result;
         }
 
+        // Events
         public event EventHandler<CylinderStateEventArgs> StateChanged;
 
-        protected virtual void OnStateChanged(string BasePos)
+        protected virtual void OnStateChanged(CylinderStateEventArgs eventArgs)
         {
             if (StateChanged != null)
             {
-                StateChanged(this, new CylinderStateEventArgs() { CylinderState = BasePos });
+                StateChanged(this, eventArgs);
+                
             }
         }
     }
 
     public class CylinderStateEventArgs : EventArgs
     {
-        public string CylinderState { get; set; }
+        public List<string> cylinderStates;
+
+        public CylinderStateEventArgs()
+        {
+            cylinderStates = new List<string>();
+        }
     }
 }

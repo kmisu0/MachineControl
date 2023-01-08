@@ -74,7 +74,8 @@
                              IsReadOnly ="True" 
                              TextAlignment="Center"
                              BorderThickness="0,0,0,0"
-                             Margin="0 2 0 0"/>
+                             Margin="0 2 0 0"
+                             Background="AliceBlue"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1"
                             Margin="5 0 0 0">
