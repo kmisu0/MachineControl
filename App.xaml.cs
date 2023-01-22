@@ -24,7 +24,7 @@ namespace MachineControl
         [STAThread]
         public static void Main(string[] args)
         {
-            Task task1 = Task.Factory.StartNew(() => startSimulator());
+            //Task task1 = Task.Factory.StartNew(() => startSimulator());
 
             var application = new App();
             application.InitializeComponent();

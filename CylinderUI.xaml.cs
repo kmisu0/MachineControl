@@ -10,6 +10,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Diagnostics;
 
 namespace MachineControl
 {
@@ -20,17 +21,19 @@ namespace MachineControl
     {
         Cylinder thisCylinder;
 
-        private bool _blinkBp;
+        private bool _blink;
+
+        public delegate void NextPrimeDelegate();
 
         public CylinderUI(object sender)
         {
             InitializeComponent();
 
-            // Subscribe to Timer
-            DispatcherTimer dispatcherTimer = new DispatcherTimer();
-            dispatcherTimer.Tick += DispatcherTimer_Tick;
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);
-            dispatcherTimer.Start();
+            // Subscribe to System.Timers.Timer
+            System.Timers.Timer sysTimer = new System.Timers.Timer(500);
+            sysTimer.Elapsed += SysTimer_Elapsed;
+            sysTimer.AutoReset = true;
+            sysTimer.Enabled = true;
 
             thisCylinder = (Cylinder)sender;
             visuCylinderState(thisCylinder.getRunningState());
@@ -42,20 +45,35 @@ namespace MachineControl
             thisCylinder.StateChanged += ThisCylinder_StateChanged;
         }
 
-        private void DispatcherTimer_Tick(object sender, EventArgs e)
+        private void SysTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (txtBoxStateBasePosition.Text == "Run To BP")
+            Dispatcher.BeginInvoke(new Action(() =>
             {
-                if (_blinkBp)
+                if (txtBoxStateBasePosition.Text == "Run To BP")
                 {
-                    txtBoxStateBasePosition.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0x00, 0xFF, 0x00));
+                    if (_blink)
+                    {
+                        txtBoxStateBasePosition.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0x00, 0xFF, 0x00));
+                    }
+                    else
+                    {
+                        txtBoxStateBasePosition.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
+                    }
                 }
-                else
+
+                if (txtBoxStateWorkPosition.Text == "Run To WP")
                 {
-                    txtBoxStateBasePosition.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
+                    if (_blink)
+                    {
+                        txtBoxStateWorkPosition.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0x00, 0xFF, 0x00));
+                    }
+                    else
+                    {
+                        txtBoxStateWorkPosition.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
+                    }
                 }
-            }
-             _blinkBp = !_blinkBp;
+                _blink = !_blink;
+            }));
         }
 
         private void ThisCylinder_StateChanged(object sender, CylinderStateEventArgs e)
